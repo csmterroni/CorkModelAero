@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Carousel With Page Selection</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    /* Normalize + Bootstrap-friendly Reset */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-text-size-adjust: 100%;
+      line-height: 1.5;
+      background-color: #fff;
+      color: #000;
+    }
+
+    .carousel-item img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      border: 4px solid #dee2e6;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .carousel-caption {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.6);
+      color: white;
+      padding: 15px 20px;
+      border-radius: 5px;
+      z-index: 10;
+    }
+
+    .carousel-caption a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .carousel-caption a:hover {
+      text-decoration: underline;
+    }
+
+    .btn-container {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .btn-container .btn {
+      margin: 5px;
+      min-width: 140px;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      font-weight: 500;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .btn-container .btn.active {
+      background-color: #007bff;
+      color: white;
+      border-color: #007bff;
+    }
+
+    @media (max-width: 768px) {
+      .btn-container .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 15px;
+      }
+
+      .carousel-caption {
+        font-size: 12px;
+        padding: 10px 15px;
+      }
+    }
+
+    .carousel-toggle-button {
+      position: absolute;
+      top: 85%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 20;
+      width: 60px;
+      height: 60px;
+      border: none;
+      border-radius: 50%;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(128, 128, 128, 0.6);
+      color: white;
+      opacity: 1;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(4px);
+    }
+
+    .carousel-toggle-button:hover,
+    .carousel-toggle-button:focus {
+      background-color: rgba(100, 100, 100, 0.8);
+      transform: translate(-50%, -50%) scale(1.05);
+    }
+
+    @media (max-width: 768px) {
+      .carousel-toggle-button {
+        opacity: 0.25;
+      }
+
+      .carousel-toggle-button.paused {
+        opacity: 1;
+      }
+
+      .carousel-toggle-button:hover,
+      .carousel-toggle-button:focus {
+        opacity: 1;
+      }
+    }
+
+    @media (min-width: 769px) {
+  .mobile-only-title {
+    display: none;
+  }
+}
+  </style>
+</head>
+<body>
+
+<div class="container mt-5">
+  <div id="imageCarousel" class="carousel slide" data-ride="carousel" data-interval="2000">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="https://github.com/csmterroni/CorkModelAero/blob/main/F3a.jpg?raw=true" alt="F3A Aeroplanes" />
+      </div>
+      <div class="carousel-item">
+        <img src="https://github.com/csmterroni/CorkModelAero/blob/main/Quad.jpg?raw=true" alt="Drone Racing" />
+      </div>
+      <div class="carousel-item">
+        <img src="https://github.com/csmterroni/CorkModelAero/blob/main/Glider.jpg?raw=true" alt="Gliders" />
+      </div>
+      <div class="carousel-item">
+        <img src="https://github.com/csmterroni/CorkModelAero/blob/main/Scale%20Model.jpg?raw=true" alt="Scale Models" />
+      </div>
+      <div class="carousel-item">
+        <img src="https://github.com/csmterroni/CorkModelAero/blob/main/Heli.jpg?raw=true" alt="Helicopters" />
+      </div>
+      <div class="carousel-item">
+        <img src="https://github.com/csmterroni/CorkModelAero/blob/main/Control_Line.jpg?raw=true" alt="Control Line" />
+      </div>
+    </div>
+
+    <a class="carousel-control-prev" href="#imageCarousel" role="button" data-slide="prev" aria-label="Previous Slide">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    </a>
+    <a class="carousel-control-next" href="#imageCarousel" role="button" data-slide="next" aria-label="Next Slide">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    </a>
+
+    <button id="playPauseButton" class="carousel-toggle-button" title="Pause Carousel">
+      <i class="fas fa-pause"></i>
+    </button>
+  </div>
+
+  <div class="btn-container">
+    <h3 class="mobile-only-title" style="margin-bottom: 15px; font-size: 18px; text-transform:  capitalize; text-align: center;">
+        Click Buttons Below for More Info
+      </h3>
+      
+    
+    <a href="https://sites.google.com/view/corkmodelaeroclub/f3a-aeroplanes" class="btn btn-outline-primary mb-2" data-slide-index="0">F3A Aeroplanes</a>
+    <a href="https://sites.google.com/view/corkmodelaeroclub/drone-racing" class="btn btn-outline-primary mb-2" data-slide-index="1">Drone Racing</a>
+    <a href="https://sites.google.com/view/corkmodelaeroclub/gliders" class="btn btn-outline-primary mb-2" data-slide-index="2">Gliders</a>
+    <a href="https://sites.google.com/view/corkmodelaeroclub/scale-models" class="btn btn-outline-primary mb-2" data-slide-index="3">Scale Models</a>
+    <a href="https://sites.google.com/view/corkmodelaeroclub/helicopters" class="btn btn-outline-primary mb-2" data-slide-index="4">Helicopters</a>
+    <a href="https://sites.google.com/view/corkmodelaeroclub/control-line" class="btn btn-outline-primary mb-2" data-slide-index="5">Control Line</a>
+  </div>
+  
+  
+</div>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+  let isPaused = false;
+
+  function togglePlayPause() {
+    const carousel = $('#imageCarousel');
+    const button = $('#playPauseButton');
+    const icon = button.find('i');
+
+    if (isPaused) {
+      carousel.carousel('cycle');
+      icon.removeClass('fa-play').addClass('fa-pause');
+      button.removeClass('paused');
+
+      if ($(window).width() < 768) {
+        setTimeout(() => {
+          if (!isPaused) {
+            button.css('opacity', '0.25');
+          }
+        }, 3000);
+      }
+    } else {
+      carousel.carousel('pause');
+      icon.removeClass('fa-pause').addClass('fa-play');
+      button.addClass('paused');
+      button.css('opacity', '1');
+    }
+
+    isPaused = !isPaused;
+  }
+
+  $(document).ready(function () {
+    $('#playPauseButton').on('click', togglePlayPause);
+
+    const initialIndex = $('#imageCarousel .carousel-item.active').index();
+    $(`.btn-container .btn[data-slide-index="${initialIndex}"]`).addClass('active');
+
+    $('#imageCarousel').on('slid.bs.carousel', function (e) {
+      const activeIndex = $(e.relatedTarget).index();
+      $('.btn-container .btn').removeClass('active');
+      $(`.btn-container .btn[data-slide-index="${activeIndex}"]`).addClass('active');
+    });
+
+    if ($(window).width() < 768) {
+      setTimeout(() => {
+        if (!isPaused) {
+          $('#playPauseButton').css('opacity', '0.6');
+        }
+      }, 3000);
+
+      $('#playPauseButton').on('touchstart', () => {
+        $('#playPauseButton').css('opacity', '1');
+      });
+    }
+  });
+</script>
+
+</body>
+</html>
